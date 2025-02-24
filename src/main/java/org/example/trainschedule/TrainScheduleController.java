@@ -1,7 +1,6 @@
 package org.example.trainschedule;
 
 import org.springframework.web.bind.annotation.*;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,12 +11,10 @@ public class TrainScheduleController {
     private List<TrainSchedule> trainSchedules = new ArrayList<>(); // In-memory storage (for demo)
 
     public TrainScheduleController() {
-        // Initialize some dummy data
         trainSchedules.add(new TrainSchedule("123A", "Moscow", "Saint Petersburg", "08:00", "12:00"));
         trainSchedules.add(new TrainSchedule("456B", "Saint Petersburg", "Moscow", "14:00", "18:00"));
     }
 
-    // GET endpoint с Query Parameters
     @GetMapping("/search")
     public List<TrainSchedule> searchTrains(
             @RequestParam(value = "departure", required = false) String departureStation,
@@ -33,7 +30,6 @@ public class TrainScheduleController {
         return results;
     }
 
-    // GET endpoint с Path Parameters
     @GetMapping("/{trainId}")
     public TrainSchedule getTrainById(@PathVariable String trainId) {
         for (TrainSchedule schedule : trainSchedules) {
@@ -41,7 +37,7 @@ public class TrainScheduleController {
                 return schedule;
             }
         }
-        return null; // Или можно вернуть ResponseEntity.notFound().build();
+        return null;
     }
 }
 
