@@ -1,9 +1,14 @@
 package org.example.trainschedule;
 
-import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
+@SuppressWarnings("checkstyle:RegexpMultiline")
 @RestController
 @RequestMapping("/trains")
 public class TrainScheduleController {
@@ -15,6 +20,7 @@ public class TrainScheduleController {
         trainSchedules.add(new TrainSchedule("456B", "Saint Petersburg", "Moscow", "14:00", "18:00"));
     }
 
+    @SuppressWarnings({"checkstyle:RegexpMultiline", "checkstyle:LineLength"})
     @GetMapping("/search")
     public List<TrainSchedule> searchTrains(
             @RequestParam(value = "departure", required = false) String departureStation,
