@@ -9,6 +9,8 @@ public class TrainSchedule {
     private String arrivalTime;
 
     public TrainSchedule() {
+        this.departureStation = "Default Departure";
+        this.arrivalStation = "Default Arrival";
     }
 
     public TrainSchedule(String trainId, String departureStation, String arrivalStation, String departureTime, String arrivalTime) {
