@@ -9,6 +9,7 @@ public class TrainSchedule {
     private String arrivalTime;
 
     public TrainSchedule() {
+        // TODO:
     }
 
     public TrainSchedule(String trainId, String departureStation, String arrivalStation, String departureTime, String arrivalTime) {
@@ -24,6 +25,7 @@ public class TrainSchedule {
     }
 
     public void setTrainId(String trainId) {
+        // TODO:setting train ID
         this.trainId = trainId;
     }
 
@@ -32,6 +34,7 @@ public class TrainSchedule {
     }
 
     public void setDepartureStation(String departureStation) {
+        // TODO:setting departure station
         this.departureStation = departureStation;
     }
 
@@ -40,22 +43,27 @@ public class TrainSchedule {
     }
 
     public void setArrivalStation(String arrivalStation) {
+        // TODO: setting arrival station
         this.arrivalStation = arrivalStation;
     }
 
     public String getDepartureTime() {
+        // TODO: we will get departure time
         return departureTime;
     }
 
     public void setDepartureTime(String departureTime) {
+        // TODO: setting departure time
         this.departureTime = departureTime;
     }
 
     public String getArrivalTime() {
+        // TODO: get arrival time
         return arrivalTime;
     }
 
     public void setArrivalTime(String arrivalTime) {
+        // TODO: set arrival time
         this.arrivalTime = arrivalTime;
     }
 
