@@ -1,7 +1,13 @@
-package org.example.trainschedule;
+package org.example.trainschedule.domain;
 
-@SuppressWarnings("checkstyle:LineLength")
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "train_schedule") // Optional:  Map to a specific table name
 public class TrainSchedule {
+    @Id
     private String trainId;
     private String departureStation;
     private String arrivalStation;
