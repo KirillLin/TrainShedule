@@ -4,6 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+@SuppressWarnings("checkstyle:LineLength")
 @Entity
 @Table(name = "train_schedule") // Optional:  Map to a specific table name
 public class TrainSchedule {

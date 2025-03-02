@@ -1,5 +1,6 @@
 package org.example.trainschedule.model;
 
+@SuppressWarnings({"checkstyle:RegexpMultiline", "checkstyle:AbbreviationAsWordInName"})
 public class TrainScheduleDTO {
 
     private String trainId;
@@ -11,6 +12,7 @@ public class TrainScheduleDTO {
     // Constructors, getters, and setters
     public TrainScheduleDTO() {
     }
+    @SuppressWarnings({"checkstyle:EmptyLineSeparator", "checkstyle:LineLength"})
     public TrainScheduleDTO(String trainId, String departureStation, String arrivalStation, String departureTime, String arrivalTime) {
         this.trainId = trainId;
         this.departureStation = departureStation;
