@@ -1,7 +1,7 @@
 package org.example.trainschedule.repository;
 
 import java.util.List;
-import org.example.trainschedule.domain.TrainSchedule;
+import org.example.trainschedule.model.TrainSchedule;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
