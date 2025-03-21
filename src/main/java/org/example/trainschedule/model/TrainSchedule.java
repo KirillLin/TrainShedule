@@ -1,6 +1,10 @@
 package org.example.trainschedule.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

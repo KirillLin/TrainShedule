@@ -22,6 +22,7 @@ mvnw
 mvnw.cmd
 pom.xml
 .gitattributes
+application.properties
 
 ### NetBeans ###
 /nbproject/private/
