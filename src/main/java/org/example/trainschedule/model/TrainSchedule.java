@@ -1,5 +1,6 @@
 package org.example.trainschedule.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -29,5 +30,6 @@ public class TrainSchedule {
     private String arrivalTime;
 
     @OneToMany(mappedBy = "trainSchedule", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonManagedReference // Добавляем аннотацию
     private List<Passenger> passengers;
 }

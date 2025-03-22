@@ -1,5 +1,6 @@
 package org.example.trainschedule.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -23,6 +24,7 @@ public class Passenger {
     private String name;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "trainSchedule_id")
+    @JoinColumn(name = "train_number", referencedColumnName = "trainNumber")
+    @JsonBackReference
     private TrainSchedule trainSchedule;
 }

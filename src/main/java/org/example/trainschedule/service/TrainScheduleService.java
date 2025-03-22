@@ -12,13 +12,13 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class TrainScheduleService {
     private final TrainScheduleRepository trainScheduleRepository;
-    private final PassengerRepository passengerRepository;
+    private final PassengerService passengerService;
 
     @SuppressWarnings("checkstyle:LineLength")
     @Autowired
-    public TrainScheduleService(TrainScheduleRepository trainScheduleRepository, PassengerRepository passengerRepository) {
+    public TrainScheduleService(TrainScheduleRepository trainScheduleRepository, PassengerService passengerService) {
         this.trainScheduleRepository = trainScheduleRepository;
-        this.passengerRepository = passengerRepository;
+        this.passengerService = passengerService;
     }
 
     @SuppressWarnings("checkstyle:LineLength")
@@ -53,6 +53,7 @@ public class TrainScheduleService {
     }
 
     public void deleteTrainSchedule(String trainNumber) {
+        passengerService.removePassengersFromTrain(trainNumber);
         trainScheduleRepository.deleteById(trainNumber);
     }
 }

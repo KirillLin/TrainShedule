@@ -1,6 +1,7 @@
 package org.example.trainschedule.service;
 
 import java.util.List;
+import java.util.Optional;
 import org.example.trainschedule.model.Passenger;
 import org.example.trainschedule.model.TrainSchedule;
 import org.example.trainschedule.repository.PassengerRepository;
@@ -40,5 +41,33 @@ public class PassengerService {
 
     public Passenger createPassenger(Passenger passenger) {
         return passengerRepository.save(passenger);
+    }
+
+    public Optional<Passenger> getPassengerById(Long passengerId) {
+        return passengerRepository.findById(passengerId);
+    }
+
+    public void deletePassenger(Long passengerId) {
+        removePassengerFromTrain(passengerId);
+        passengerRepository.deleteById(passengerId);
+    }
+
+    public void removePassengerFromTrain(Long passengerId) {
+        Optional<Passenger> passengerOptional = passengerRepository.findById(passengerId);
+        if (passengerOptional.isPresent()) {
+            Passenger passenger = passengerOptional.get();
+            passenger.setTrainSchedule(null);
+            passengerRepository.save(passenger);
+        } else {
+            throw new IllegalArgumentException("Passenger with ID " + passengerId + " not found");
+        }
+    }
+
+    public void removePassengersFromTrain(String trainNumber) {
+        passengerRepository.findByTrainSchedule_TrainNumber(trainNumber)
+                .forEach(passenger -> {
+                    passenger.setTrainSchedule(null);
+                    passengerRepository.save(passenger);
+                });
     }
 }
