@@ -1,6 +1,7 @@
 package org.example.trainschedule.service;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -16,22 +17,64 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class TrainService {
     private final TrainRepository trainRepository;
     private final SeatRepository seatRepository;
     private final TrainMapper trainMapper;
     private final SeatMapper seatMapper;
 
-    public List<TrainDTO> getAllTrains() {
-        return trainRepository.findAll().stream()
-                .map(trainMapper::toDto)
-                .collect(Collectors.toList());
+    @SuppressWarnings("checkstyle:AbbreviationAsWordInName")
+    @Transactional
+    public SeatDTO addSeatToTrain(Long trainId, SeatDTO seatDTO) {
+        Train train = trainRepository.findById(trainId)
+                .orElseThrow(() -> new EntityNotFoundException("Train not found"));
+
+        Seat seat = Seat.builder()
+                .number(seatDTO.getNumber())
+                .type(seatDTO.getType())
+                .price(seatDTO.getPrice())
+                .build();
+
+        train.addSeat(seat);
+
+        trainRepository.save(train);
+
+        return convertToSeatDTO(seat);
+    }
+
+    @SuppressWarnings("checkstyle:AbbreviationAsWordInName")
+    private SeatDTO convertToSeatDTO(Seat seat) {
+        return SeatDTO.builder()
+                .id(seat.getId())
+                .trainId(seat.getTrain() != null ? seat.getTrain().getId() : null)
+                .number(seat.getNumber())
+                .type(seat.getType())
+                .price(seat.getPrice())
+                .build();
+    }
+
+    @SuppressWarnings("checkstyle:AbbreviationAsWordInName")
+    public TrainDTO createTrain(TrainDTO trainDTO) {
+        if (trainRepository.existsByNumber(trainDTO.getNumber())) {
+            throw new IllegalStateException("Train with number " + trainDTO.getNumber() + " already exists");
+        }
+
+        Train train = trainMapper.toEntity(trainDTO);
+        Train savedTrain = trainRepository.save(train);
+        return trainMapper.toDto(savedTrain);
     }
 
     public TrainDTO getTrainById(Long id) {
         return trainRepository.findById(id)
                 .map(trainMapper::toDto)
-                .orElseThrow(() -> new EntityNotFoundException("Train not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Train not found with id: " + id));
+    }
+
+    public List<TrainDTO> getAllTrains() {
+        return trainRepository.findAll().stream()
+                .map(trainMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     public List<TrainDTO> searchByNumber(String number) {
@@ -40,38 +83,43 @@ public class TrainService {
                 .collect(Collectors.toList());
     }
 
-    public TrainDTO createTrain(TrainDTO trainDTO) {
-        Train train = trainMapper.toEntity(trainDTO);
-        Train savedTrain = trainRepository.save(train);
-        return trainMapper.toDto(savedTrain);
+    @SuppressWarnings("checkstyle:AbbreviationAsWordInName")
+    public TrainDTO updateTrain(Long id, TrainDTO trainDTO) {
+        Train train = trainRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Train not found with id: " + id));
+
+        trainMapper.updateEntity(trainDTO, train);
+        Train updatedTrain = trainRepository.save(train);
+        return trainMapper.toDto(updatedTrain);
+    }
+
+    @SuppressWarnings("checkstyle:AbbreviationAsWordInName")
+    @Transactional
+    public TrainDTO updateTrainByNumber(String trainNumber, TrainDTO trainDTO) {
+        Train train = trainRepository.findByNumber(trainNumber)
+                .orElseThrow(() -> new EntityNotFoundException("Train not found with number: " + trainNumber));
+
+        if (trainDTO.getDepartureStation() != null) {
+            train.setDepartureStation(trainDTO.getDepartureStation());
+        }
+        if (trainDTO.getArrivalStation() != null) {
+            train.setArrivalStation(trainDTO.getArrivalStation());
+        }
+        if (trainDTO.getDepartureTime() != null) {
+            train.setDepartureTime(trainDTO.getDepartureTime());
+        }
+        if (trainDTO.getArrivalTime() != null) {
+            train.setArrivalTime(trainDTO.getArrivalTime());
+        }
+
+        Train updatedTrain = trainRepository.save(train);
+        return trainMapper.toDto(updatedTrain);
     }
 
     public void deleteTrain(Long id) {
+        if (!trainRepository.existsById(id)) {
+            throw new EntityNotFoundException("Train not found with id: " + id);
+        }
         trainRepository.deleteById(id);
-    }
-
-    public List<SeatDTO> getTrainSeats(Long trainId) {
-        return seatRepository.findByTrainId(trainId).stream()
-                .map(seatMapper::toDto)
-                .collect(Collectors.toList());
-    }
-
-    public List<SeatDTO> getTrainSeatsByType(Long trainId, String type) {
-        return seatRepository.findByTrainIdAndTypeIgnoreCase(trainId, type).stream()
-                .map(seatMapper::toDto)
-                .collect(Collectors.toList());
-    }
-
-    public SeatDTO addSeatToTrain(Long trainId, SeatDTO seatDTO) {
-        Train train = trainRepository.findById(trainId)
-                .orElseThrow(() -> new EntityNotFoundException("Train not found"));
-
-        Seat seat = seatMapper.toEntity(seatDTO, train);
-        Seat savedSeat = seatRepository.save(seat);
-        return seatMapper.toDto(savedSeat);
-    }
-
-    public void deleteSeat(Long trainId, Long seatId) {
-        seatRepository.deleteByIdAndTrainId(seatId, trainId);
     }
 }

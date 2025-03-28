@@ -1,8 +1,12 @@
 package org.example.trainschedule.dto;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.example.trainschedule.model.Seat;
 
+@SuppressWarnings("checkstyle:AbbreviationAsWordInName")
 @Data
 @Builder
 @NoArgsConstructor
@@ -15,9 +19,13 @@ public class SeatDTO {
     private double price;
 
     public static SeatDTO fromEntity(Seat seat) {
+        if (seat == null) {
+            return null;
+        }
+
         return SeatDTO.builder()
                 .id(seat.getId())
-                .trainId(seat.getTrain().getId())
+                .trainId(seat.getTrain() != null ? seat.getTrain().getId() : null)
                 .number(seat.getNumber())
                 .type(seat.getType())
                 .price(seat.getPrice())
