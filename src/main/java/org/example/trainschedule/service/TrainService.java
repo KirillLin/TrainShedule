@@ -84,16 +84,6 @@ public class TrainService {
     }
 
     @SuppressWarnings("checkstyle:AbbreviationAsWordInName")
-    public TrainDTO updateTrain(Long id, TrainDTO trainDTO) {
-        Train train = trainRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Train not found with id: " + id));
-
-        trainMapper.updateEntity(trainDTO, train);
-        Train updatedTrain = trainRepository.save(train);
-        return trainMapper.toDto(updatedTrain);
-    }
-
-    @SuppressWarnings("checkstyle:AbbreviationAsWordInName")
     @Transactional
     public TrainDTO updateTrainByNumber(String trainNumber, TrainDTO trainDTO) {
         Train train = trainRepository.findByNumber(trainNumber)

@@ -42,38 +42,22 @@ public class SeatService {
 
     @SuppressWarnings("checkstyle:AbbreviationAsWordInName")
     @Transactional
-    public SeatDTO createSeat(SeatDTO seatDTO) {
-        Train train = trainRepository.findById(seatDTO.getTrainId())
-                .orElseThrow(() -> new EntityNotFoundException("Train not found with id: " + seatDTO.getTrainId()));
-
-        if (seatRepository.existsByTrainIdAndNumber(seatDTO.getTrainId(), seatDTO.getNumber())) {
-            throw new IllegalStateException("Seat with number " + seatDTO.getNumber() + " already exists in this train");
-        }
-
-        Seat seat = seatMapper.toEntity(seatDTO, train);
-        Seat savedSeat = seatRepository.save(seat);
-        return seatMapper.toDto(savedSeat);
-    }
-
-    @SuppressWarnings("checkstyle:AbbreviationAsWordInName")
-    @Transactional
     public SeatDTO updateSeat(Long id, SeatDTO seatDTO) {
         Seat existingSeat = seatRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Seat not found with id: " + id));
 
-        Train train = trainRepository.findById(seatDTO.getTrainId())
-                .orElseThrow(() -> new EntityNotFoundException("Train not found with id: " + seatDTO.getTrainId()));
+        Train train = null;
+        if (seatDTO.getTrainId() != null) {
+            train = trainRepository.findById(seatDTO.getTrainId())
+                    .orElseThrow(() -> new EntityNotFoundException("Train not found with id: " + seatDTO.getTrainId()));
 
-        if (!existingSeat.getNumber().equals(seatDTO.getNumber()) &&
+            if (!existingSeat.getNumber().equals(seatDTO.getNumber()) &&
                     seatRepository.existsByTrainIdAndNumber(seatDTO.getTrainId(), seatDTO.getNumber())) {
-            throw new IllegalStateException("Seat with number " + seatDTO.getNumber() + " already exists in this train");
+                throw new IllegalStateException("Seat with number " + seatDTO.getNumber() + " already exists in this train");
+            }
         }
 
-        existingSeat.setTrain(train);
-        existingSeat.setNumber(seatDTO.getNumber());
-        existingSeat.setType(seatDTO.getType());
-        existingSeat.setPrice(seatDTO.getPrice());
-
+        seatMapper.updateEntityFromDto(seatDTO, existingSeat, train);
         Seat updatedSeat = seatRepository.save(existingSeat);
         return seatMapper.toDto(updatedSeat);
     }
@@ -98,29 +82,13 @@ public class SeatService {
         Seat seat = Seat.builder()
                 .train(train)
                 .number(seatDTO.getNumber())
+                .isFree(seatDTO.getIsFree())
                 .type(seatDTO.getType())
                 .price(seatDTO.getPrice())
                 .build();
 
         Seat savedSeat = seatRepository.save(seat);
         return seatMapper.toDto(savedSeat);
-    }
-
-    @Transactional
-    public SeatDTO unbindSeat(Long seatId, Long newTrainId) {
-        Seat seat = seatRepository.findById(seatId)
-                .orElseThrow(() -> new EntityNotFoundException("Seat not found"));
-
-        if (newTrainId != null) {
-            Train newTrain = trainRepository.findById(newTrainId)
-                    .orElseThrow(() -> new EntityNotFoundException("New train not found"));
-            seat.setTrain(newTrain);
-        } else {
-            seat.setTrain(null);
-        }
-
-        Seat updatedSeat = seatRepository.save(seat);
-        return seatMapper.toDto(updatedSeat);
     }
 }
 

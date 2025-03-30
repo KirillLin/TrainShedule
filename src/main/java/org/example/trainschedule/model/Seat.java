@@ -34,6 +34,9 @@ public class Seat {
     @Column(nullable = false)
     private Integer number;
 
+    @Column(name = "is_free", nullable = false)
+    private Boolean isFree;
+
     @Column(nullable = false)
     private String type;
 

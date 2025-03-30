@@ -15,18 +15,18 @@ public class SeatDTO {
     private Long id;
     private Long trainId;
     private Integer number;
+    private Boolean isFree;
     private String type;
-    private double price;
+    private Double price;
 
     public static SeatDTO fromEntity(Seat seat) {
-        if (seat == null) {
-            return null;
-        }
+        if (seat == null) return null;
 
         return SeatDTO.builder()
                 .id(seat.getId())
                 .trainId(seat.getTrain() != null ? seat.getTrain().getId() : null)
                 .number(seat.getNumber())
+                .isFree(seat.getIsFree())
                 .type(seat.getType())
                 .price(seat.getPrice())
                 .build();
