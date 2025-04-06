@@ -58,4 +58,11 @@ public class TrainController {
         trainService.deleteTrain(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/with-free-seats")
+    public ResponseEntity<List<TrainDTO>> getTrainsWithFreeSeats(
+            @RequestParam String departure,
+            @RequestParam String arrival) {
+        return ResponseEntity.ok(trainService.findTrainsWithFreeSeats(departure, arrival));
+    }
 }

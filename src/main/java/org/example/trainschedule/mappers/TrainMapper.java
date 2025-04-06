@@ -27,6 +27,7 @@ public class TrainMapper {
                 .build();
     }
 
+    @SuppressWarnings("checkstyle:AbbreviationAsWordInName")
     public Train toEntity(TrainDTO trainDTO) {
         return Train.builder()
                 .id(trainDTO.getId())
@@ -36,11 +37,5 @@ public class TrainMapper {
                 .departureTime(trainDTO.getDepartureTime())
                 .arrivalTime(trainDTO.getArrivalTime())
                 .build();
-    }
-
-    public void updateEntity(TrainDTO trainDTO, Train train) {
-        if (trainDTO.getNumber() != null) {
-            train.setNumber(trainDTO.getNumber());
-        }
     }
 }

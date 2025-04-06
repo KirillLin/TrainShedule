@@ -20,6 +20,7 @@ public class SeatMapper {
                 .build();
     }
 
+    @SuppressWarnings("checkstyle:AbbreviationAsWordInName")
     public void updateEntityFromDto(SeatDTO seatDTO, Seat seat, Train train) {
         if (seatDTO.getNumber() != null) {
             seat.setNumber(seatDTO.getNumber());

@@ -1,5 +1,6 @@
 package org.example.trainschedule.dto;
 
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -14,7 +15,9 @@ import org.example.trainschedule.model.Train;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class TrainDTO {
+public class TrainDTO implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     private Long id;
     private String number;
     private String departureStation;

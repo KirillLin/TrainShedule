@@ -7,6 +7,7 @@ import org.example.trainschedule.dto.SeatDTO;
 import org.example.trainschedule.mappers.SeatMapper;
 import org.example.trainschedule.model.Seat;
 import org.example.trainschedule.model.Train;
+import org.example.trainschedule.model.TrainCache;
 import org.example.trainschedule.repository.SeatRepository;
 import org.example.trainschedule.repository.TrainRepository;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ public class SeatService {
     private final SeatRepository seatRepository;
     private final TrainRepository trainRepository;
     private final SeatMapper seatMapper;
+    private final TrainCache trainCache;
 
     @Transactional(readOnly = true)
     public List<SeatDTO> getAllSeats() {
@@ -40,7 +42,7 @@ public class SeatService {
                 .toList();
     }
 
-    @SuppressWarnings("checkstyle:AbbreviationAsWordInName")
+    @SuppressWarnings({"checkstyle:AbbreviationAsWordInName", "checkstyle:LineLength"})
     @Transactional
     public SeatDTO updateSeat(Long id, SeatDTO seatDTO) {
         Seat existingSeat = seatRepository.findById(id)
@@ -59,6 +61,7 @@ public class SeatService {
 
         seatMapper.updateEntityFromDto(seatDTO, existingSeat, train);
         Seat updatedSeat = seatRepository.save(existingSeat);
+        trainCache.clearAll();
         return seatMapper.toDto(updatedSeat);
     }
 
@@ -68,6 +71,7 @@ public class SeatService {
             throw new EntityNotFoundException("Seat not found with id: " + id);
         }
         seatRepository.deleteById(id);
+        trainCache.clearAll();
     }
 
     @SuppressWarnings("checkstyle:AbbreviationAsWordInName")
@@ -88,6 +92,7 @@ public class SeatService {
                 .build();
 
         Seat savedSeat = seatRepository.save(seat);
+        trainCache.clearAll();
         return seatMapper.toDto(savedSeat);
     }
 }

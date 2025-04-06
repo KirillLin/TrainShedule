@@ -46,14 +46,4 @@ public class Train {
     @Builder.Default
     @JsonManagedReference
     private List<Seat> seats = new ArrayList<>();
-
-    public void addSeat(Seat seat) {
-        seats.add(seat);
-        seat.setTrain(this);
-    }
-
-    public void removeSeat(Seat seat) {
-        seats.remove(seat);
-        seat.setTrain(null);
-    }
 }
