@@ -8,7 +8,7 @@ import org.example.trainschedule.dto.TrainDTO;
 import org.example.trainschedule.mappers.SeatMapper;
 import org.example.trainschedule.mappers.TrainMapper;
 import org.example.trainschedule.model.Train;
-import org.example.trainschedule.model.TrainCache;
+import org.example.trainschedule.cache.TrainCache;
 import org.example.trainschedule.repository.SeatRepository;
 import org.example.trainschedule.repository.TrainRepository;
 import org.slf4j.Logger;
@@ -102,13 +102,14 @@ public class TrainService {
         logger.info("Запрос к БД для маршрута: {} -> {}", departure, arrival);
         long dbQueryStart = System.currentTimeMillis();
 
-        List<Train> trains = trainRepository.findTrainsWithFreeSeats(departure, arrival);
+        List<Train> trains = trainRepository.findTrainsWithFreeSeatsNative(departure, arrival);
+
         List<TrainDTO> result = trains.stream()
                 .map(trainMapper::toDto)
                 .collect(Collectors.toList());
 
         long dbQueryTime = System.currentTimeMillis() - dbQueryStart;
-        logger.info("Запрос к БД выполнен за {} мс | Найдено поездов: {}",
+        logger.info("Запрос выполнен за {} мс | Найдено поездов: {}",
                 dbQueryTime, result.size());
 
         trainCache.put(cacheKey, result);

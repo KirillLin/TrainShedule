@@ -7,7 +7,7 @@ import org.example.trainschedule.dto.SeatDTO;
 import org.example.trainschedule.mappers.SeatMapper;
 import org.example.trainschedule.model.Seat;
 import org.example.trainschedule.model.Train;
-import org.example.trainschedule.model.TrainCache;
+import org.example.trainschedule.cache.TrainCache;
 import org.example.trainschedule.repository.SeatRepository;
 import org.example.trainschedule.repository.TrainRepository;
 import org.springframework.stereotype.Service;

@@ -1,4 +1,4 @@
-package org.example.trainschedule.model;
+package org.example.trainschedule.cache;
 
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -60,18 +60,9 @@ public class TrainCache {
                 duration, key, cache.size());
     }
 
-    public synchronized boolean containsKey(String key) {
-        return cache.containsKey(key);
-    }
-
     public synchronized void clearAll() {
         int sizeBefore = cache.size();
         cache.clear();
         logger.info("Кэш полностью очищен | Размер до очистки: {}", sizeBefore);
-    }
-
-    public synchronized void logCacheStats() {
-        logger.info("Текущий размер кэша: {}", cache.size());
-        logger.info("Содержимое кэша: {}", cache.keySet());
     }
 }

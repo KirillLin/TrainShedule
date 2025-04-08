@@ -25,7 +25,7 @@ public interface TrainRepository extends JpaRepository<Train, Long> {
             @Param("departure") String departure,
             @Param("arrival") String arrival);
 
-    @Query(value = "SELECT DISTINCT t.* FROM trains t " +
+    @Query(value = "SELECT DISTINCT t.* FROM train t " +
             "JOIN seats s ON t.id = s.train_id " +
             "WHERE t.departure_station = :departure " +
             "AND t.arrival_station = :arrival " +
