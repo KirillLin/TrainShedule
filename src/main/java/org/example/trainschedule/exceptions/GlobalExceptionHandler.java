@@ -1,11 +1,12 @@
 package org.example.trainschedule.exceptions;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.ValidationException;
+import java.io.FileNotFoundException;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
-import jakarta.validation.ConstraintViolationException;
-import jakarta.validation.ValidationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -71,6 +72,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(apiError);
     }
 
+    @SuppressWarnings("checkstyle:LineLength")
     @ExceptionHandler(HttpMessageNotReadableException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<ApiError> handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
@@ -80,6 +82,14 @@ public class GlobalExceptionHandler {
                 Collections.singletonList(ex.getLocalizedMessage()));
 
         return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(FileNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ResponseEntity<List<String>> handleFileNotFound(FileNotFoundException ex) {
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(List.of(ex.getMessage()));
     }
 }
 
