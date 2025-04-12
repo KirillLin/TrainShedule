@@ -1,5 +1,7 @@
 package org.example.trainschedule.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
@@ -19,11 +21,25 @@ public class TrainDTO implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private Long id;
+
+    @NotBlank(message = "Train number is required")
+    @Pattern(regexp = "^[A-Za-z0-9]+$", message = "Train number must contain only letters and digits")
     private String number;
+
+    @NotBlank(message = "Departure station is required")
     private String departureStation;
+
+    @NotBlank(message = "Arrival station is required")
     private String arrivalStation;
+
+    @NotBlank(message = "Departure time is required")
+    @Pattern(regexp = "^([01]?[0-9]|2[0-3]):[0-5][0-9]$", message = "Invalid time format, expected HH:MM")
     private String departureTime;
+
+    @NotBlank(message = "Arrival time is required")
+    @Pattern(regexp = "^([01]?[0-9]|2[0-3]):[0-5][0-9]$", message = "Invalid time format, expected HH:MM")
     private String arrivalTime;
+
     private List<SeatDTO> seats;
 
     public static TrainDTO fromEntity(Train train) {
