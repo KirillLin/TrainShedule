@@ -1,7 +1,9 @@
 package org.example.trainschedule.service;
 
+import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.example.trainschedule.cache.TrainCache;
@@ -44,6 +46,12 @@ public class TrainService {
         return trainRepository.findById(id)
                 .map(trainMapper::toDto)
                 .orElseThrow(() -> new EntityNotFoundException("Train not found with id: " + id));
+    }
+
+    public TrainDTO getTrainByNumber(String number) {
+        return trainRepository.findByNumber(number)
+                .map(trainMapper::toDto)
+                .orElseThrow(() -> new EntityNotFoundException("Train not found with id: " + number));
     }
 
     public List<TrainDTO> getAllTrains() {

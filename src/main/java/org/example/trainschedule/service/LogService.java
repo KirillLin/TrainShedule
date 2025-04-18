@@ -42,7 +42,7 @@ public class LogService {
 
     @SuppressWarnings({"checkstyle:Indentation", "checkstyle:RegexpMultiline"})
     private Path createFilteredLogFile(LocalDate targetDate) throws IOException {
-        Path sourcePath = Paths.get(LOG_FILE_PATH);
+        Path sourcePath = getLogFilePath();
 
         if (!Files.exists(sourcePath)) {
             throw new FileNotFoundException("Log file not found at: " + sourcePath);
@@ -78,5 +78,9 @@ public class LogService {
         } catch (DateTimeParseException e) {
             return false;
         }
+    }
+
+    protected Path getLogFilePath() {
+        return Paths.get(LOG_FILE_PATH);
     }
 }

@@ -2,6 +2,9 @@ package org.example.trainschedule.repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+
+import org.example.trainschedule.dto.TrainDTO;
 import org.example.trainschedule.model.Train;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -13,6 +16,8 @@ public interface TrainRepository extends JpaRepository<Train, Long> {
     Optional<Train> findByNumber(String number);
 
     boolean existsByNumber(String number);
+
+    TrainDTO getTrainByNumber(String number);
 
     List<Train> findByNumberContainingIgnoreCase(String number);
 
@@ -34,6 +39,9 @@ public interface TrainRepository extends JpaRepository<Train, Long> {
     List<Train> findTrainsWithFreeSeatsNative(
             @Param("departure") String departure,
             @Param("arrival") String arrival);
+
+    @Query("SELECT t.number FROM Train t")
+    Set<String> findAllNumbers();
 }
 
 

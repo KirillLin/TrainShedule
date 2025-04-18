@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import java.util.List;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.example.trainschedule.dto.TrainDTO;
 import org.example.trainschedule.service.TrainService;
@@ -107,7 +108,7 @@ public class TrainController {
         return ResponseEntity.noContent().build();
     }
 
-    @Operation(summary = "Find trains with free seats",
+    @Operation(summary = "Find trains with free seats from A to B",
             description = "Search for trains with available seats between two stations")
     @ApiResponse(responseCode = "200", description = "Successfully retrieved matching trains",
             content = @Content(mediaType = "application/json",

@@ -1,9 +1,13 @@
 package org.example.trainschedule.exceptions;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
 import java.util.List;
+import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
+@Getter
+@Schema(hidden = true)
 public class ApiError {
     private final HttpStatus status;
     private final String message;
@@ -17,19 +21,4 @@ public class ApiError {
         this.timestamp = LocalDateTime.now();
     }
 
-    public HttpStatus getStatus() {
-        return status;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public List<String> getErrors() {
-        return errors;
-    }
-
-    public LocalDateTime getTimestamp() {
-        return timestamp;
-    }
 }

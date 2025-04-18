@@ -42,7 +42,7 @@ public class LogController {
     @GetMapping("/download")
     public ResponseEntity<Resource> downloadLogsByDate(
             @Parameter(description = "Date in YYYY-MM-DD format", required = true,
-                    example = "2023-12-31")
+                    example = "2025-04-12")
             @RequestParam @Pattern(regexp = "\\d{4}-\\d{2}-\\d{2}") String date) {
         try {
             return logService.getLogsByDateAsDownloadableFile(date);

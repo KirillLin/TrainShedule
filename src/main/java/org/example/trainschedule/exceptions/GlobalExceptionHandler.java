@@ -4,9 +4,13 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.ValidationException;
 import java.io.FileNotFoundException;
+import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
+import lombok.Getter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -90,6 +94,26 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
                 .body(List.of(ex.getMessage()));
+    }
+
+    @Getter
+    public static class BulkException extends RuntimeException {
+        private final List<Long> failedIds;
+
+        public BulkException(String message, List<Long> failedIds) {
+            super(message);
+            this.failedIds = failedIds;
+        }
+    }
+
+    @ExceptionHandler(BulkException.class)
+    public ResponseEntity<Map<String, Object>> handleBulkException(BulkException ex) {
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("timestamp", LocalDateTime.now());
+        body.put("message", ex.getMessage());
+        body.put("failedIds", ex.getFailedIds());
+
+        return new ResponseEntity<>(body, HttpStatus.MULTI_STATUS);
     }
 }
 

@@ -3,6 +3,7 @@ package org.example.trainschedule.logging;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.example.trainschedule.service.BulkService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class LoggingAspect {
     private static final Logger LOGGER = LoggerFactory.getLogger(LoggingAspect.class);
+    private static final Logger LOG = LoggerFactory.getLogger(BulkService.class);
 
     @Around("execution(* org.example.trainschedule.controller.*.*(..))")
     public Object logControllerMethods(ProceedingJoinPoint joinPoint) throws Throwable {
