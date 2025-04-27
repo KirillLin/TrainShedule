@@ -11,12 +11,17 @@ import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.stream.Stream;
+import org.example.trainschedule.model.LogTask;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -24,6 +29,8 @@ public class LogService {
     private static final String LOG_FILE_PATH = "logs/application.log";
     private static final DateTimeFormatter DATE_FORMATTER =
             DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    private final ConcurrentMap<String, LogTask> tasks = new ConcurrentHashMap<>();
+    private final String logDirectory = "logs";
 
     public ResponseEntity<Resource> getLogsByDateAsDownloadableFile(String dateString) throws IOException {
         LocalDate targetDate = LocalDate.parse(dateString, DATE_FORMATTER);
@@ -69,7 +76,7 @@ public class LogService {
         return tempFile;
     }
 
-    private boolean isLineMatchesDate(String line, LocalDate targetDate) {
+    public boolean isLineMatchesDate(String line, LocalDate targetDate) {
         if (line == null || line.length() < 10) return false;
 
         try {
@@ -82,5 +89,57 @@ public class LogService {
 
     protected Path getLogFilePath() {
         return Paths.get(LOG_FILE_PATH);
+    }
+
+    @Async
+    public void processLogTaskAsync(LogTask task) {
+        try {
+            task.setStatus(LogTask.TaskStatus.PROCESSING);
+
+            try {
+                Thread.sleep(30000);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+
+            Path tempFile = createFilteredLogFile(LocalDate.parse(task.getDate()));
+            task.setResultFile(tempFile);
+            task.setStatus(LogTask.TaskStatus.COMPLETED);
+        } catch (Exception e) {
+            task.setStatus(LogTask.TaskStatus.FAILED);
+            task.setErrorMessage(e.getMessage());
+        }
+    }
+
+    public LogTask getTaskStatus(String taskId) {
+        return tasks.get(taskId);
+    }
+
+    public ResponseEntity<Resource> getTaskResult(String taskId) throws IOException {
+        LogTask task = tasks.get(taskId);
+        if (task == null || task.getResultFile() == null) {
+            throw new FileNotFoundException("Task result not available");
+        }
+
+        Resource resource = new InputStreamResource(Files.newInputStream(task.getResultFile()));
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION,
+                        "attachment; filename=logs-" + task.getDate() + ".log")
+                .contentType(MediaType.TEXT_PLAIN)
+                .contentLength(Files.size(task.getResultFile()))
+                .body(resource);
+    }
+
+    public LogTask createTask(String date) {
+        LogTask task = new LogTask();
+        task.setTaskId(UUID.randomUUID().toString());
+        task.setStatus(LogTask.TaskStatus.PENDING);
+        task.setDate(date);
+        tasks.put(task.getTaskId(), task);
+        return task;
+    }
+
+    public boolean doesTaskExist(String taskId) {
+        return tasks.containsKey(taskId);
     }
 }

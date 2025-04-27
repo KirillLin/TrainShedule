@@ -20,49 +20,49 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
-class SeatServiceTest {
 
-    @Mock
-    private SeatRepository seatRepository;
+    @ExtendWith(MockitoExtension.class)
+    class SeatServiceTest {
 
-    @Mock
-    private TrainRepository trainRepository;
+        @Mock
+        private SeatRepository seatRepository;
 
-    @Mock
-    private SeatMapper seatMapper;
+        @Mock
+        private TrainRepository trainRepository;
 
-    @Mock
-    private TrainCache trainCache;
+        @Mock
+        private SeatMapper seatMapper;
 
-    @InjectMocks
-    private SeatService seatService;
+        @Mock
+        private TrainCache trainCache;
 
-    private final Long TEST_SEAT_ID = 1L;
-    private final Long TEST_TRAIN_ID = 1L;
-    private Seat testSeat;
-    private SeatDTO testSeatDTO;
+        @InjectMocks
+        private SeatService seatService;
 
-    @BeforeEach
-    void setUp() {
-        testSeat = Seat.builder()
-                .id(TEST_SEAT_ID)
-                .number(1)
-                .isFree(true)
-                .type("Business")
-                .price(100.0)
-                .build();
+        private final Long TEST_SEAT_ID = 1L;
+        private final Long TEST_TRAIN_ID = 1L;
+        private Seat testSeat;
+        private SeatDTO testSeatDTO;
 
-        testSeatDTO = SeatDTO.builder()
-                .id(TEST_SEAT_ID)
-                .trainId(TEST_TRAIN_ID)
-                .number(1)
-                .isFree(true)
-                .type("Business")
-                .price(100.0)
-                .build();
-    }
+        @BeforeEach
+        void setUp() {
+            testSeat = Seat.builder()
+                    .id(TEST_SEAT_ID)
+                    .number(1)
+                    .isFree(true)
+                    .type("Business")
+                    .price(100.0)
+                    .build();
 
+            testSeatDTO = SeatDTO.builder()
+                    .id(TEST_SEAT_ID)
+                    .trainId(TEST_TRAIN_ID)
+                    .number(1)
+                    .isFree(true)
+                    .type("Business")
+                    .price(100.0)
+                    .build();
+        }
     @Test
     void getAllSeats_ShouldReturnListOfSeats() {
         when(seatRepository.findAll()).thenReturn(List.of(testSeat));
@@ -157,6 +157,21 @@ class SeatServiceTest {
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessageContaining("already exists in this train");
     }
+
+    @Test
+    void updateSeat_WhenNumberNotChanged_ShouldSkipDuplicateCheck() {
+            when(seatRepository.findById(TEST_SEAT_ID)).thenReturn(Optional.of(testSeat));
+            when(trainRepository.findById(TEST_TRAIN_ID)).thenReturn(Optional.of(Train.builder().id(TEST_TRAIN_ID).build()));
+            when(seatRepository.save(any())).thenReturn(testSeat);
+            when(seatMapper.toDto(testSeat)).thenReturn(testSeatDTO);
+
+            // When
+            SeatDTO result = seatService.updateSeat(TEST_SEAT_ID, testSeatDTO);
+
+            // Then
+            assertThat(result.getNumber()).isEqualTo(testSeatDTO.getNumber());
+            verify(seatRepository, never()).existsByTrainIdAndNumber(any(), any());
+        }
 
     @Test
     void addSeatToTrain_WhenValidData_ShouldReturnSavedSeat() {

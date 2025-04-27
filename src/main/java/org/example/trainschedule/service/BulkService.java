@@ -1,16 +1,16 @@
 package org.example.trainschedule.service;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
-import jakarta.persistence.EntityNotFoundException;
-import org.example.trainschedule.dto.SeatDTO;
 import org.example.trainschedule.dto.TrainDTO;
-import org.example.trainschedule.exceptions.GlobalExceptionHandler;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.example.trainschedule.repository.TrainRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class BulkService {
@@ -30,22 +30,22 @@ public class BulkService {
         if (trainDTOs == null || trainDTOs.isEmpty()) {
             return Collections.emptyList();
         }
+
         Set<String> existingNumbers = trainRepository.findAllNumbers();
 
-        List<TrainDTO> createdTrains = new ArrayList<>();
-
-        for (TrainDTO trainDTO : trainDTOs) {
-            if (!existingNumbers.contains(trainDTO.getNumber())) {
-                try {
-                    TrainDTO createdTrain = trainService.createTrain(trainDTO);
-                    createdTrains.add(createdTrain);
-                    existingNumbers.add(trainDTO.getNumber());
-                } catch (Exception e) {
-                    LOGGER.info("Поезд уже существует: {}", trainDTO.getNumber(), e);
-                }
-            }
-        }
-
-        return createdTrains;
+        return trainDTOs.stream()
+                .filter(trainDTO -> !existingNumbers.contains(trainDTO.getNumber()))
+                .map(trainDTO -> {
+                    try {
+                        TrainDTO createdTrain = trainService.createTrain(trainDTO);
+                        existingNumbers.add(trainDTO.getNumber());
+                        return createdTrain;
+                    } catch (Exception e) {
+                        LOGGER.info("Поезд уже существует: {}", trainDTO.getNumber(), e);
+                        return null;
+                    }
+                })
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
     }
 }
