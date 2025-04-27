@@ -10,7 +10,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import java.util.List;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.example.trainschedule.dto.TrainDTO;
 import org.example.trainschedule.service.TrainService;

@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class LoggingAspect {
     private static final Logger LOGGER = LoggerFactory.getLogger(LoggingAspect.class);
-    private static final Logger LOG = LoggerFactory.getLogger(BulkService.class);
 
     @Around("execution(* org.example.trainschedule.controller.*.*(..))")
     public Object logControllerMethods(ProceedingJoinPoint joinPoint) throws Throwable {
