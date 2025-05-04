@@ -18,6 +18,8 @@ public interface SeatRepository extends JpaRepository<Seat, Long> {
 
     Optional<Seat> findByTrainAndNumber(Train train, Integer number);
 
+    List<Seat> findByTrainIdOrderByNumberAsc(Long trainId);
+
     @Query("SELECT COUNT(s) FROM Seat s WHERE s.id IN :ids")
     long countByIdIn(@Param("ids") Set<Long> ids);
 

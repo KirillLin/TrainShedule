@@ -30,7 +30,6 @@ public class LogService {
     private static final DateTimeFormatter DATE_FORMATTER =
             DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private final ConcurrentMap<String, LogTask> tasks = new ConcurrentHashMap<>();
-    private final String logDirectory = "logs";
 
     public ResponseEntity<Resource> getLogsByDateAsDownloadableFile(String dateString) throws IOException {
         LocalDate targetDate = LocalDate.parse(dateString, DATE_FORMATTER);
@@ -97,7 +96,7 @@ public class LogService {
             task.setStatus(LogTask.TaskStatus.PROCESSING);
 
             try {
-                Thread.sleep(30000);
+                Thread.sleep(20000);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
@@ -137,9 +136,5 @@ public class LogService {
         task.setDate(date);
         tasks.put(task.getTaskId(), task);
         return task;
-    }
-
-    public boolean doesTaskExist(String taskId) {
-        return tasks.containsKey(taskId);
     }
 }

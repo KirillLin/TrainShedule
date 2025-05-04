@@ -1,0 +1,36 @@
+<svg width="200" height="120" viewBox="0 0 200 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- Основной корпус поезда -->
+    <rect x="20" y="40" width="160" height="40" rx="5" fill="#2C3E50"/>
+
+    <!-- Кабина машиниста -->
+    <path d="M180 40V60C180 65.5228 175.523 70 170 70H160V40H180Z" fill="#34495E"/>
+
+    <!-- Окна -->
+    <rect x="30" y="50" width="30" height="15" rx="2" fill="#3498DB"/>
+    <rect x="70" y="50" width="30" height="15" rx="2" fill="#3498DB"/>
+    <rect x="110" y="50" width="30" height="15" rx="2" fill="#3498DB"/>
+
+    <!-- Фары -->
+    <circle cx="190" cy="50" r="5" fill="#F1C40F"/>
+
+    <!-- Колеса -->
+    <circle cx="50" cy="80" r="12" fill="#7F8C8D"/>
+    <circle cx="50" cy="80" r="8" fill="#BDC3C7"/>
+    <circle cx="100" cy="80" r="12" fill="#7F8C8D"/>
+    <circle cx="100" cy="80" r="8" fill="#BDC3C7"/>
+    <circle cx="150" cy="80" r="12" fill="#7F8C8D"/>
+    <circle cx="150" cy="80" r="8" fill="#BDC3C7"/>
+
+    <!-- Дымовая труба -->
+    <rect x="160" y="30" width="8" height="10" fill="#95A5A6"/>
+    <path d="M164 20C164 22.2091 165.791 24 168 24C170.209 24 172 22.2091 172 20H164Z" fill="#95A5A6"/>
+
+    <!-- Дым -->
+    <circle cx="168" cy="15" r="4" fill="#ECF0F1" opacity="0.8"/>
+    <circle cx="173" cy="10" r="3" fill="#ECF0F1" opacity="0.6"/>
+    <circle cx="177" cy="5" r="2" fill="#ECF0F1" opacity="0.4"/>
+
+    <!-- Рельсы -->
+    <rect x="10" y="92" width="180" height="5" fill="#95A5A6"/>
+
+</svg>

@@ -10,6 +10,7 @@ import org.example.trainschedule.model.Seat;
 import org.example.trainschedule.model.Train;
 import org.example.trainschedule.repository.SeatRepository;
 import org.example.trainschedule.repository.TrainRepository;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,7 +24,7 @@ public class SeatService {
 
     @Transactional(readOnly = true)
     public List<SeatDTO> getAllSeats() {
-        return seatRepository.findAll().stream()
+        return seatRepository.findAll(Sort.by(Sort.Direction.ASC, "number")).stream()
                 .map(seatMapper::toDto)
                 .toList();
     }
@@ -37,7 +38,7 @@ public class SeatService {
 
     @Transactional(readOnly = true)
         public List<SeatDTO> getSeatsByTrainId(Long trainId) {
-        return seatRepository.findByTrainId(trainId).stream()
+        return seatRepository.findByTrainIdOrderByNumberAsc(trainId).stream()
                 .map(seatMapper::toDto)
                 .toList();
     }

@@ -59,8 +59,7 @@ public class LogController {
             description = "Returns the log file if ready (200)"
     )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "File is Ready",
-                    content = @Content(schema = @Schema(implementation = TrainDTO.class))),
+            @ApiResponse(responseCode = "200", description = "File is Ready"),
             @ApiResponse(responseCode = "400", description = "File in process"),
             @ApiResponse(responseCode = "404", description = "This task dont exist")
     })
@@ -68,8 +67,7 @@ public class LogController {
         try {
             return logService.getTaskResult(taskId);
         } catch (FileNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.ACCEPTED)
-                    .header("X-Task-Status", "processing")
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .header("Retry-After", "30")
                     .body(new ByteArrayResource("The file is still being created".getBytes()));
         } catch (IOException e) {

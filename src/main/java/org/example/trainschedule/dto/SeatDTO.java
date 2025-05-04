@@ -34,9 +34,6 @@ public class SeatDTO {
     @NotNull(message = "Seat status is required")
     @Schema(description = "Availability status of the seat", example = "true/false or 0/1")
     private Boolean isFree;
-
-    @NotBlank(message = "Seat type is required")
-    @Schema(description = "Type/class of the seat", example = "Business")
     private String type;
 
     @NotNull(message = "Price is required")
